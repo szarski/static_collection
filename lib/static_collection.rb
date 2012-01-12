@@ -3,6 +3,11 @@ require "static_collection/version"
 module StaticCollection
   class Base
     def initialize(name)
+      @id = self.class.next_available_id
+    end
+
+    def id
+      @id
     end
   end
 
@@ -15,6 +20,14 @@ module StaticCollection
       @items ||= []
       @items << item
       return item
+    end
+
+    def next_available_id
+      if all.empty?
+        1
+      else
+        all.last.id + 1
+      end
     end
   end
   Base.extend(ClassMethods)

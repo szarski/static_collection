@@ -34,16 +34,45 @@ describe StaticCollection do
       end
     end
 
-  describe ".item" do
-    it "should return an instance of this class" do
-      subject.item(:sth).should be_a(subject)
+    describe ".item" do
+      it "should return an instance of this class" do
+        subject.item(:sth).should be_a(subject)
+      end
+
+      it "should add an item" do
+        item = subject.item :sth
+        subject.all.should include(item)
+      end
+
+      it "should assign an id" do
+        id = mock
+        subject.stubs(:next_available_id).returns(id)
+        item = subject.item :sth
+        item.id.should == id
+      end
     end
-    it "should add an item" do
-      item = subject.item :sth
-      subject.all.should include(item)
+
+    describe ".next_available_id" do
+      context "there is no items" do
+        before {subject.stubs(:all).returns([])}
+        it "should return 1" do
+          subject.next_available_id.should == 1
+        end
+      end
+      context "there are some items already" do
+        let(:last_id) {mock}
+        before do
+          subject.item :one
+          subject.item :two
+          subject.all.last.stubs(:id).returns(last_id)
+        end
+        it "should return the first available id" do
+          result = mock
+          last_id.expects(:+).with(1).returns result
+          subject.next_available_id.should == result
+        end
+      end
     end
-  end
 
   end
-
 end
