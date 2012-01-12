@@ -9,6 +9,9 @@ describe StaticCollection do
   describe "methods" do
 
     subject do
+      if defined?(TestClass)
+        Object.send :remove_const, :TestClass
+      end
       class TestClass < StaticCollection::Base
       end
       TestClass
@@ -29,6 +32,16 @@ describe StaticCollection do
         subject.all.should == items
       end
     end
+
+  describe ".item" do
+    it "should return an instance of this class" do
+      subject.item(:sth).should be_a(subject)
+    end
+    it "should add an item" do
+      item = subject.item :sth
+      subject.all.should include(item)
+    end
+  end
 
   end
 
