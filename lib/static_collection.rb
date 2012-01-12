@@ -15,6 +15,7 @@ module StaticCollection
     def all
       @items || []
     end
+
     def item(name)
       item = new(name)
       @items ||= []

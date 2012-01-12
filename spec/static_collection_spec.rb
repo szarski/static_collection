@@ -53,12 +53,14 @@ describe StaticCollection do
     end
 
     describe ".next_available_id" do
+
       context "there is no items" do
         before {subject.stubs(:all).returns([])}
         it "should return 1" do
           subject.next_available_id.should == 1
         end
       end
+
       context "there are some items already" do
         let(:last_id) {mock}
         before do
@@ -66,12 +68,14 @@ describe StaticCollection do
           subject.item :two
           subject.all.last.stubs(:id).returns(last_id)
         end
+
         it "should return the first available id" do
           result = mock
           last_id.expects(:+).with(1).returns result
           subject.next_available_id.should == result
         end
       end
+
     end
 
   end
