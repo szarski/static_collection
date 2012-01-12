@@ -6,4 +6,20 @@ describe StaticCollection do
     end
   end
 
+  describe "methods" do
+
+    subject do
+      class TestClass < StaticCollection::Base
+      end
+      TestClass
+    end
+
+    describe ".all" do
+      it "should return an array" do
+        subject.all.should be_a(Array)
+      end
+    end
+
+  end
+
 end
