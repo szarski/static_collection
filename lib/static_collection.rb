@@ -6,7 +6,7 @@ module StaticCollection
 
   module ClassMethods
     def all
-      []
+      @items || []
     end
   end
   Base.extend(ClassMethods)
