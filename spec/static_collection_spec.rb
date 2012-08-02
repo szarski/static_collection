@@ -52,6 +52,33 @@ describe StaticCollection do
       end
     end
 
+    describe ".item_xxx" do
+      it "should work with any nuber" do
+        lambda{subject.item_123(:sth)}.should_not raise_error
+      end
+
+      it "should not accept anything but numbers" do
+        lambda{subject.item_1a3(:sth)}.should raise_error
+      end
+
+      context "there is no item with id 5" do
+        before {subject.stubs(:find).with(5).returns nil}
+
+        it "should assign the id 5" do
+          subject.item_5 :sth
+          subject.find(5).should_not be_nil
+        end
+      end
+
+      context "there is an item with id 5" do
+        before {subject.stubs(:find).with(5).returns mock}
+
+        it "should raise" do
+          lambda{subject.item_5 :sth}.should raise_error
+        end
+      end
+    end
+
     describe ".next_available_id" do
 
       context "there is no items" do
@@ -76,6 +103,30 @@ describe StaticCollection do
         end
       end
 
+    end
+
+    describe ".find" do
+      context "there are no items" do
+        before {subject.all.should be_empty}
+        it "should raise" do
+          lambda {subject.find(5)}.should raise_error
+        end
+      end
+      context "there is no item with id 5, but there are other items" do
+        before {subject.item :sth}
+
+        it "should raise when searching for 5" do
+          lambda {subject.find(5)}.should raise_error
+        end
+      end
+      context "there is an item with id 5" do
+        let(:item) {subject.item_5 :sth}
+
+        it "should return that item when searching for 5" do
+          item
+          subject.find(5).should == item
+        end
+      end
     end
 
   end

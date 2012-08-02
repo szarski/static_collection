@@ -23,6 +23,23 @@ module StaticCollection
       return item
     end
 
+    def method_missing(method_name, *args, &block)
+      if match = (method_name.to_s.match /^item_([0-9]+)$/)
+        id = match[1].to_i
+        if find(id)
+          raise Exception
+        end
+        item *args
+        item.instance_variable_set("@id", 3)
+      else
+        super(method_name, *args, &block)
+      end
+    end
+
+    def find(id)
+      all.select{|x| x.id == id}.first || nil#raise(Exception)
+    end
+
     def next_available_id
       if all.empty?
         1
